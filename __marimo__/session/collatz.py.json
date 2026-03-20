@@ -1,0 +1,94 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.21.1",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "dd64c59c73629f639ec4f8449bcb5eed",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "de057e9dbfd88aa009d7f776cb1bac7a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"collatz-conjecture-explorer\">\ud83c\udf3f Collatz Conjecture Explorer</h1></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "5c7df15cfc4eaf5c1d6de5e75d172b98",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 2rem'><marimo-ui-element object-id='vblA-0' random-id='b5701f1f-8a1f-92ab-7cba-00a95aa1ae19'><marimo-slider data-initial-value='5000' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Number of starting points&lt;/span&gt;&lt;/span&gt;&quot;' data-start='100' data-stop='10000' data-step='100' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element><marimo-ui-element object-id='vblA-1' random-id='a315d71f-69cf-7f95-96e0-4392aaf860d7'><marimo-dropdown data-initial-value='[&quot;1 million&quot;]' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Max starting value&lt;/span&gt;&lt;/span&gt;&quot;' data-options='[&quot;100 thousand&quot;,&quot;500 thousand&quot;,&quot;1 million&quot;,&quot;5 million&quot;,&quot;10 million&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false'></marimo-dropdown></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "1c1e2da0f9ddef232cf692f0e8a5590b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "bff4b2de1562cc4efdb8cb11303ceb0f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-callout-output data-html='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;&lt;strong&gt;Tree built.&lt;/strong&gt; 142,411 unique edges \u2014 longest chain: &lt;strong&gt;837,799&lt;/strong&gt; (524 steps) \u2014 5,000 starts below 1 million&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;success&quot;'></marimo-callout-output>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "1a49f732feef4bc49069f9244abbd169",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><img src='./@file/5575353-4364336-TfyqYBrm.png' style='width: 100%' /><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">\ud83d\udcbe Saved as <code>collatz-1million-5000.png</code> at 600 dpi</span></span></div>"
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "/var/folders/n2/1fm5mmdn64z6dgwv0dmjpn7r0000gn/T/marimo_87256/__marimo__cell_PKri_.py:77: UserWarning: constrained_layout not applied because axes sizes collapsed to zero.  Try making figure larger or Axes decorations smaller.\n  plt.savefig(filename, dpi=600, facecolor=\"w\")\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    }
+  ]
+}
