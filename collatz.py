@@ -215,17 +215,20 @@ def __(
 			fontfamily=FONT, fontsize=6, linespacing=1.4, color=plt.cm.magma(0.55))
 
 		filename = f"collatz-{fmt_max(MAX_VAL).replace(' ', '')}-{N_STARTS}.png"
-		plt.savefig(filename, dpi=600, facecolor="#0d0d0d")
+		import io, base64
 		
-		# Display a lightweight version inline
-		import io
+		# Save high-res to disk
+		fig.savefig(filename, dpi=600, facecolor="#0d0d0d")
+		
+		# Encode a lightweight version for inline display
 		buf = io.BytesIO()
 		fig.savefig(buf, format='png', dpi=150, facecolor="#0d0d0d")
 		buf.seek(0)
+		img_b64 = base64.b64encode(buf.read()).decode()
 		plt.close(fig)
-
+		
 		mo.vstack([
-		    mo.image(buf, width="100%"),
+		    mo.Html(f'<img src="data:image/png;base64,{img_b64}" style="width:100%;border-radius:8px">'),
 		    mo.md(f"💾 Saved as `{filename}` at 600 dpi"),
 		])
 	
