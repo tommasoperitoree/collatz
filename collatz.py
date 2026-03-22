@@ -41,7 +41,7 @@ def __(mo):
 		label="Max starting value",
 	)
 	run_button = mo.ui.run_button(label="▶ Run")
-	mo.hstack([n_starts_slider, max_val_dropdown, run_button], justify="start", gap=2)
+	mo.hstack([n_starts_slider, max_val_dropdown, run_button], justify="start", align="end", gap=2)
 	return max_val_dropdown, n_starts_slider, run_button
 
 @app.cell
