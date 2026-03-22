@@ -407,18 +407,14 @@ async function run() {
     if (y2 < minY) minY = y2; if (y2 > maxY) maxY = y2;
   }
   
-  const PAD    = 90;
-  const treeW  = maxX - minX || 1;
-  const treeH  = maxY - minY || 1;
-  const scaleX = (W - PAD * 2) / treeW;
-  const scaleY = (H - PAD * 2) / treeH;
-  const scale  = Math.min(scaleX, scaleY) * 0.88;
-  
-  // Centre the tree horizontally and vertically
+  const PAD     = 90;
+  const treeW   = maxX - minX || 1;
+  const treeH   = maxY - minY || 1;
+  const scaleX  = (W - PAD * 2) / treeW;
+  const scaleY  = (H - PAD * 2) / treeH;
+  const scale   = Math.min(scaleX, scaleY) * 0.88;
   const offX    = (W - treeW * scale) / 2 - minX * scale;
   const offY_top = (H - treeH * scale) / 2;
-  
-  // Y is flipped: large math-y → small canvas-y (top)
   const px = x =>  x * scale + offX;
   const py = y => offY_top + (maxY - y) * scale;
 
