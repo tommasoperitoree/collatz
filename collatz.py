@@ -199,6 +199,49 @@ def __(
 				ax.text(_x, _y - 0.4, f"{_num:,}", fontsize=6, fontfamily=FONT,
 						ha="center", va="top", color=plt.cm.magma(1 - _col))
 
+		# ── Highway spine labels ─────────────────────────────────────────────────────
+		# Walk from root following the highest-count outgoing edge at each step
+		# This traces the "main trunk" of the tree
+		highway_nodes = []
+		current = 1
+		for _ in range(80):  # max 80 steps along the spine
+			children = edges_from.get(current, [])
+			if not children:
+				break
+			# pick the child with the highest traversal count
+			best_src, best_idx = max(children, key=lambda c: chain[c[1], 2])
+			highway_nodes.append(best_src)
+			current = best_src
+
+		# Label every ~12th node along the highway (skip ones too close to other labels)
+		labeled = {1, anchor, longest_start} | set(top_nodes)
+		for i, node in enumerate(highway_nodes):
+			if i % 12 != 0:
+				continue
+			if node in labeled:
+				continue
+			if node not in node_pos:
+				continue
+			_x, _y, _col = node_pos[node]
+			ax.annotate(
+		    	f"{node:,}",
+		    	xy=(_x, _y),
+		    	xytext=(_x + 0.3, _y + 0.15),
+		        fontsize=5,
+		        fontfamily=FONT,
+		        color=plt.cm.magma(max(0.4, 1 - _col)),
+		        arrowprops=dict(
+		            arrowstyle="-",
+		            color=plt.cm.magma(max(0.4, 1 - _col)),
+		            lw=0.5,
+		            alpha=0.6,
+		        ),
+		        ha="left",
+		        va="bottom",
+		    )
+			labeled.add(node)
+
+			
 		ax.text(0, -0.4, "1", fontsize=6, ha="center", va="top",
 				color=plt.cm.magma(0.9))
 
