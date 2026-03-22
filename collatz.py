@@ -24,7 +24,7 @@ def _(mo):
 
 
 @app.cell
-def __(mo):
+def _(mo):
 	n_starts_slider = mo.ui.slider(
 		100, 10_000, value=5_000, step=100,
 		label="Number of starting points"
@@ -44,8 +44,9 @@ def __(mo):
 	mo.hstack([n_starts_slider, max_val_dropdown, run_button], justify="start", align="end", gap=2)
 	return max_val_dropdown, n_starts_slider, run_button
 
+
 @app.cell
-def __(mo, run_button, n_starts_slider, max_val_dropdown, np):
+def _(max_val_dropdown, mo, n_starts_slider, np, run_button):
 	mo.stop(
 		not run_button.value,
 		mo.md("_Adjust parameters above and click **▶ Run**_")
@@ -117,9 +118,20 @@ def _(
 
 
 @app.cell
-def __(
-	Counter, LineCollection, MAX_VAL, N_STARTS, anchor, chain,
-	defaultdict, fmt_max, longest_len, longest_start, mo, np, plt,
+def _(
+	Counter,
+	LineCollection,
+	MAX_VAL,
+	N_STARTS,
+	anchor,
+	chain,
+	defaultdict,
+	fmt_max,
+	longest_len,
+	longest_start,
+	mo,
+	np,
+	plt,
 ):
 	FONT = "DejaVu Serif"
 	with mo.status.spinner(title="Rendering tree…"):
@@ -224,21 +236,21 @@ def __(
 				continue
 			_x, _y, _col = node_pos[node]
 			ax.annotate(
-		    	f"{node:,}",
-		    	xy=(_x, _y),
-		    	xytext=(_x + 0.5, _y - 0.35),
-		        fontsize=5,
-		        fontfamily=FONT,
-		        color=plt.cm.magma(max(0.4, 1 - _col)),
-		        arrowprops=dict(
-		            arrowstyle="-",
-		            color=plt.cm.magma(max(0.4, 1 - _col)),
-		            lw=0.5,
-		            alpha=0.6,
-		        ),
-		        ha="left",
-		        va="top",
-		    )
+				f"{node:,}",
+				xy=(_x, _y),
+				xytext=(_x + 0.5, _y - 0.35),
+				fontsize=5,
+				fontfamily=FONT,
+				color=plt.cm.magma(max(0.4, 1 - _col)),
+				arrowprops=dict(
+					arrowstyle="-",
+					color=plt.cm.magma(max(0.4, 1 - _col)),
+					lw=0.5,
+					alpha=0.6,
+				),
+				ha="left",
+				va="top",
+			)
 			labeled.add(node)
 
 
@@ -266,10 +278,11 @@ def __(
 		plt.close(fig)
 
 	mo.vstack([
-	    mo.Html(f'<img src="data:image/png;base64,{img_b64}" style="width:100%;border-radius:8px">'),
-	    mo.md(f"💾 Saved as `{filename}` at 600 dpi"),
+		mo.Html(f'<img src="data:image/png;base64,{img_b64}" style="width:100%;border-radius:8px">'),
+		mo.md(f"💾 Saved as `{filename}` at 600 dpi"),
 	])
-	
+	return
+
 
 if __name__ == "__main__":
 	app.run()

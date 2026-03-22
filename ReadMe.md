@@ -21,7 +21,7 @@ This project visualizes the paths of thousands of random starting numbers simult
 
 ## Preview
 
-![Collatz tree — 5000 paths below 1 million](collatz-1million-5000.png)
+![Collatz tree — 5000 paths below 1 million](preview.png)
 
 *5,000 random starting points below 1,000,000 · rendered at 600 dpi*
 
