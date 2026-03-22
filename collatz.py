@@ -25,36 +25,33 @@ def _(mo):
 
 @app.cell
 def __(mo):
-	form = (
-		mo.ui.form(
-			mo.hstack([
-				mo.ui.slider(
-					100, 10_000, value=5_000, step=100,
-					label="Number of starting points"
-				),
-				mo.ui.dropdown(
-					options={
-						"100 thousand":  100_000,
-						"500 thousand":  500_000,
-						"1 million":   1_000_000,
-						"5 million":   5_000_000,
-						"10 million": 10_000_000,
-					},
-					value="1 million",
-					label="Max starting value",
-				),
-			], justify="start", gap=2),
-			submit_button_label="▶ Run",
-		)
+	n_starts_slider = mo.ui.slider(
+		100, 10_000, value=5_000, step=100,
+		label="Number of starting points"
 	)
-	form
-	return form,
-
+	max_val_dropdown = mo.ui.dropdown(
+		options={
+			"100 thousand":  100_000,
+			"500 thousand":  500_000,
+			"1 million":   1_000_000,
+			"5 million":   5_000_000,
+			"10 million": 10_000_000,
+		},
+		value="1 million",
+		label="Max starting value",
+	)
+	run_button = mo.ui.run_button(label="▶ Run")
+	mo.hstack([n_starts_slider, max_val_dropdown, run_button], justify="start", gap=2)
+	return max_val_dropdown, n_starts_slider, run_button
 
 @app.cell
-def __(form, mo, np):
-	N_STARTS = (form.value or {}).get("slider", 5_000)	# fallback before first submit
-	MAX_VAL  = (form.value or {}).get("dropdown", 1_000_000)
+def __(mo, run_button, n_starts_slider, max_val_dropdown, np):
+	mo.stop(
+		not run_button.value,
+		mo.md("_Adjust parameters above and click **▶ Run**_")
+	)
+	N_STARTS = n_starts_slider.value
+	MAX_VAL  = max_val_dropdown.value
 
 	with mo.status.spinner(title=f"Finding longest chain below {MAX_VAL:,}…"):
 
