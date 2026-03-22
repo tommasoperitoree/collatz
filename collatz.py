@@ -164,8 +164,8 @@ def _(
 				# col=1 (highway) → magma(1) = bright yellow  ✓
 				# col=0 (cold)	→ magma(0) = near-black, lifted by floor
 				r, g, b, _ = plt.cm.magma(col)
-				alpha = 0.3 + col * 0.7		  # floor 0.3, max 1.0
-				lw	= max(0.5, 2.5 * col)	   # floor 0.5px
+				alpha = 0.45 + col * 0.55	# floor raised from 0.3 → 0.45
+				lw	= max(0.8, 2.5 * col)  # floor raised from 0.5 → 0.8	   # floor 0.5px
 
 				segments.append([pos_beg, pos_end])
 				colors.append((r, g, b, alpha))
@@ -203,6 +203,27 @@ def _(
 				_r, _g, _b, _ = plt.cm.magma(max(0.65,_col))
 				ax.scatter([_x], [_y], s=20, color=(_r, _g, _b), zorder=5, linewidths=0)
 				ax.scatter([_x], [_y], s=60, color=(_r, _g, _b, 0.2), zorder=4, linewidths=0)
+
+		# ── Highlight strands to annotated nodes ─────────────────────────────────
+		for _num in [anchor, longest_start] + top_nodes:
+			if _num not in node_pos:
+				continue
+			# Walk the ACTUAL Collatz sequence from this node to 1
+			# instead of following highest-traffic edges (that traces the highway)
+			_cur = _num
+			while _cur > 1:
+				_next = _cur // 2 if _cur % 2 == 0 else _cur * 3 + 1
+				if _cur not in node_pos or _next not in node_pos:
+					break
+				_x1, _y1, _ = node_pos[_cur]
+				_x2, _y2, _ = node_pos[_next]
+				_r, _g, _b, _ = plt.cm.magma(0.7)
+				ax.plot([_x1, _x2], [_y1, _y2],
+						color=(_r, _g, _b, 0.4),
+						lw=1.2,
+						zorder=3,
+						solid_capstyle='round')
+				_cur = _next
 
 		# ── Named labels ──────────────────────────────────────────────────
 		anchor_label  = f"2¹⁹ = {anchor:,}"
@@ -283,8 +304,9 @@ def _(
 						   f"collatz-{fmt_max(MAX_VAL).replace(' ', '')}-{N_STARTS}.png")
 		preview_path = os.path.join(NOTEBOOK_DIR, "preview.png")
 
-		fig.savefig(filename,	  dpi=600, facecolor=BG)
-		fig.savefig(preview_path,  dpi=600, facecolor=BG)
+		# uncomment to update preview fig
+		# fig.savefig(filename,	  dpi=600, facecolor=BG)
+		# fig.savefig(preview_path,  dpi=600, facecolor=BG)
 
 		# Lightweight inline version
 		buf = io.BytesIO()
