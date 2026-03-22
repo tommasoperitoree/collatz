@@ -134,7 +134,7 @@
   .canvas-wrap {
     width: 100%;
     max-width: 860px;
-    background: #fff;
+    background: #0d0d0d;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
@@ -377,9 +377,8 @@ async function run() {
   const theme = document.getElementById('theme').value;
 
   const W = canvas.width, H = canvas.height;
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = '#0d0d0d';
   ctx.fillRect(0, 0, W, H);
-
   setStatus('Finding longest chain…');
   await new Promise(r => setTimeout(r, 10));
 
