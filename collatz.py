@@ -270,9 +270,11 @@ def _(
 			fontfamily=FONT, fontsize=6, linespacing=1.4, color=plt.cm.magma(0.55))
 
 		filename = f"collatz-{fmt_max(MAX_VAL).replace(' ', '')}-{N_STARTS}.png"
-		import io, base64
+		import io, base64, os
 		buf = io.BytesIO()
 		fig.savefig(buf, format='png', dpi=150, facecolor="#0d0d0d")
+		fig.savefig(filename, dpi=600, facecolor="#0d0d0d")
+		print(f"Saved to: {os.path.abspath(filename)}")  # ← add this
 		buf.seek(0)
 		img_b64 = base64.b64encode(buf.read()).decode()
 		plt.close(fig)
