@@ -372,7 +372,7 @@ async function run() {
     const p = nodePos.get(node);
     if (!p) return;
     const col    = p.col;
-    const [r,g,b] = sampleCmap(theme, Math.max(0.5, col));  // min brightness 0.5
+    const [r,g,b] = sampleCmap(theme, Math.max(0.7, col));  // min brightness 0.5
     const lx = px(p.x), ly = py(p.y);
 
     // Halo
