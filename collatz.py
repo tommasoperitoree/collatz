@@ -145,8 +145,8 @@ def __(
 
 				r, g, b, _ = plt.cm.magma(1 - col)
 				segments.append([pos_beg, pos_end])
-				colors.append((r, g, b, max(0.15, col ** 0.5)))
-				linewidths.append(2 * col)
+				colors.append((r, g, b, max(0.25, col ** 0.6)))
+				linewidths.append(max(0.6, 2 * col))
 
 				if col > 0.5:
 					segments.append([pos_beg, pos_end])
@@ -226,7 +226,7 @@ def __(
 			ax.annotate(
 		    	f"{node:,}",
 		    	xy=(_x, _y),
-		    	xytext=(_x + 0.3, _y + 0.15),
+		    	xytext=(_x + 0.5, _y - 0.35),
 		        fontsize=5,
 		        fontfamily=FONT,
 		        color=plt.cm.magma(max(0.4, 1 - _col)),
@@ -237,11 +237,11 @@ def __(
 		            alpha=0.6,
 		        ),
 		        ha="left",
-		        va="bottom",
+		        va="top",
 		    )
 			labeled.add(node)
 
-			
+
 		ax.text(0, -0.4, "1", fontsize=6, ha="center", va="top",
 				color=plt.cm.magma(0.9))
 
