@@ -221,11 +221,11 @@ def __(
 		buf.seek(0)
 		img_b64 = base64.b64encode(buf.read()).decode()
 		plt.close(fig)
-		
-		mo.vstack([
-		    mo.Html(f'<img src="data:image/png;base64,{img_b64}" style="width:100%;border-radius:8px">'),
-		    mo.md(f"💾 Saved as `{filename}` at 600 dpi"),
-		])
+
+	mo.vstack([
+	    mo.Html(f'<img src="data:image/png;base64,{img_b64}" style="width:100%;border-radius:8px">'),
+	    mo.md(f"💾 Saved as `{filename}` at 600 dpi"),
+	])
 	
 
 if __name__ == "__main__":
