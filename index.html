@@ -6,11 +6,11 @@
 <title>Collatz Conjecture Explorer</title>
 <style>
   :root {
-    --bg: #0f0f13;
-    --surface: #1a1a24;
-    --border: #2e2e42;
+    --bg: #0d0d0d;
+    --surface: #161620;
+    --border: #2a2a3a;
     --text: #e8e8f0;
-    --muted: #888899;
+    --muted: #777788;
     --accent: #c084fc;
     --accent2: #f59e0b;
   }
@@ -20,45 +20,32 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Georgia', serif;
+    font-family: Georgia, serif;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem 1rem;
+    padding: 2rem 1rem 3rem;
   }
 
   header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
     max-width: 700px;
   }
-
-  header h1 {
-    font-size: 2rem;
-    letter-spacing: -0.02em;
-    color: var(--text);
-    margin-bottom: 0.5rem;
-  }
-
-  header p {
-    font-size: 0.9rem;
-    color: var(--muted);
-    font-style: italic;
-    line-height: 1.6;
-  }
+  header h1 { font-size: 1.9rem; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+  header p  { font-size: 0.88rem; color: var(--muted); font-style: italic; line-height: 1.6; }
 
   .controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 1.25rem 2rem;
     align-items: flex-end;
-    justify-content: center;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 1.25rem 1.75rem;
-    margin-bottom: 1.5rem;
+    padding: 1.1rem 1.5rem;
+    margin-bottom: 1.25rem;
     width: 100%;
     max-width: 860px;
   }
@@ -66,22 +53,21 @@
   .control-group {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    min-width: 180px;
+    gap: 0.35rem;
   }
 
   label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     font-family: monospace;
   }
 
   input[type=range] {
-	appearance: none;
+    appearance: none;
     -webkit-appearance: none;
-    width: 180px;
+    width: 160px;
     height: 4px;
     border-radius: 2px;
     background: var(--border);
@@ -89,9 +75,9 @@
     cursor: pointer;
   }
   input[type=range]::-webkit-slider-thumb {
-	appearance: none;
+    appearance: none;
     -webkit-appearance: none;
-    width: 14px; height: 14px;
+    width: 13px; height: 13px;
     border-radius: 50%;
     background: var(--accent);
     cursor: pointer;
@@ -102,86 +88,78 @@
     border: 1px solid var(--border);
     color: var(--text);
     font-family: monospace;
-    font-size: 0.85rem;
-    padding: 0.35rem 0.6rem;
+    font-size: 0.82rem;
+    padding: 0.3rem 0.55rem;
     border-radius: 6px;
     cursor: pointer;
     outline: none;
-    width: 180px;
+    width: 160px;
   }
 
   .val {
     font-family: monospace;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--accent2);
   }
 
-  button {
+  button#runBtn {
     background: var(--accent);
-    color: #0f0f13;
+    color: #0d0d0d;
     border: none;
     border-radius: 8px;
-    padding: 0.55rem 1.4rem;
-    font-size: 0.9rem;
-    font-family: 'Georgia', serif;
+    padding: 0.5rem 1.3rem;
+    font-size: 0.88rem;
+    font-family: Georgia, serif;
     font-weight: bold;
     cursor: pointer;
     transition: opacity 0.15s;
     white-space: nowrap;
-    align-self: flex-end;
+    margin-bottom: 0;
   }
-  button:hover { opacity: 0.85; }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button#runBtn:hover    { opacity: 0.85; }
+  button#runBtn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .canvas-wrap {
     width: 100%;
     max-width: 860px;
-    background: #0d0d0d;
-	border: 1px solid #2e2e42;   /* add this line */
+    background: var(--bg);
+    border: 1px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
-    position: relative;
   }
-
-  canvas {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
+  canvas { display: block; width: 100%; height: auto; }
 
   .status {
-    margin-top: 0.75rem;
+    margin-top: 0.65rem;
     font-family: monospace;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--muted);
-    min-height: 1.2em;
+    min-height: 1.1em;
     text-align: center;
   }
 
   .legend {
-    margin-top: 1.25rem;
+    margin-top: 1.1rem;
     max-width: 860px;
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.65rem;
   }
-
   .legend-item {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 0.8rem;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.78rem;
     line-height: 1.5;
     color: var(--muted);
   }
-
-  .legend-item strong { color: var(--text); display: block; margin-bottom: 0.2rem; }
+  .legend-item strong { color: var(--text); display: block; margin-bottom: 0.15rem; }
 
   footer {
-    margin-top: 2.5rem;
-    font-size: 0.75rem;
+    margin-top: 2rem;
+    font-size: 0.72rem;
     color: var(--muted);
     text-align: center;
   }
@@ -192,10 +170,8 @@
 
 <header>
   <h1>🌿 Collatz Conjecture Explorer</h1>
-  <p>
-    Take any positive integer. If even, halve it. If odd, multiply by 3 and add 1.<br>
-    Every number ever tried eventually reaches 1 — but nobody has proved it must.
-  </p>
+  <p>Take any positive integer. If even, halve it. If odd, multiply by 3 and add 1.<br>
+     Every number ever tried eventually reaches 1 — but nobody has proved it must.</p>
 </header>
 
 <div class="controls">
@@ -216,11 +192,11 @@
   <div class="control-group">
     <label>Color theme</label>
     <select id="theme">
-      <option value="magma">Magma (default)</option>
-      <option value="viridis">Viridis</option>
+      <option value="magma"   selected>Magma</option>
       <option value="inferno">Inferno</option>
-      <option value="plasma">Plasma</option>
-      <option value="cool">Cool (blue→pink)</option>
+      <option value="plasma" >Plasma</option>
+      <option value="viridis">Viridis</option>
+      <option value="cool"   >Cool (blue→pink)</option>
     </select>
   </div>
   <button id="runBtn">▶ Run</button>
@@ -229,26 +205,13 @@
 <div class="canvas-wrap">
   <canvas id="c" width="1720" height="966"></canvas>
 </div>
-
-<div class="status" id="status">Adjust parameters and click ▶ Run</div>
+<div class="status" id="status">Adjust parameters above and click ▶ Run</div>
 
 <div class="legend">
-  <div class="legend-item">
-    <strong>Branch angles</strong>
-    Left +8.65° for even nodes · Right −16° for odd nodes
-  </div>
-  <div class="legend-item">
-    <strong>Edge length</strong>
-    Shrinks as 1 / log(node value) — large numbers cluster near root
-  </div>
-  <div class="legend-item">
-    <strong>Color & thickness</strong>
-    Bright / thick = many chains passed here · Dark / thin = rarely visited
-  </div>
-  <div class="legend-item">
-    <strong>Annotations</strong>
-    2¹⁹ (fastest collapse) · longest chain · top 3 branching junctions
-  </div>
+  <div class="legend-item"><strong>Branch angles</strong>Left +8.65° for even nodes · Right −16° for odd nodes</div>
+  <div class="legend-item"><strong>Edge length</strong>1 / log(node value) — large numbers cluster near root</div>
+  <div class="legend-item"><strong>Color & thickness</strong>Bright / thick = highway · Dark / thin = rarely visited</div>
+  <div class="legend-item"><strong>Labels</strong>Root · 2¹⁹ anchor · longest chain · top junction nodes</div>
 </div>
 
 <footer>
@@ -257,310 +220,299 @@
 </footer>
 
 <script>
-// ── Colormaps (sampled from matplotlib) ───────────────────────────────────────
+// ── Colormaps (sampled from matplotlib) ─────────────────────────────────────
 const CMAPS = {
   magma: [
-    [0,0,4],[1,0,5],[2,1,9],[4,1,13],[6,2,17],[8,2,22],[11,3,27],[14,4,32],
-    [17,4,37],[20,5,43],[23,6,49],[27,6,55],[30,7,62],[34,8,68],[38,9,75],
-    [42,10,82],[46,11,89],[50,11,96],[55,12,103],[59,13,111],[64,14,118],
-    [68,15,126],[73,16,134],[78,17,142],[83,18,150],[87,19,158],[92,20,166],
-    [97,21,174],[102,22,182],[108,23,190],[113,24,198],[118,26,205],
-    [124,27,213],[130,28,221],[136,29,228],[142,31,235],[148,33,241],
-    [154,35,247],[161,37,252],[167,40,255],[174,43,255],[180,47,254],
-    [186,51,252],[192,56,249],[197,61,246],[202,67,242],[207,72,238],
-    [212,78,234],[216,84,229],[221,91,224],[225,97,219],[229,104,214],
-    [233,111,208],[237,118,202],[241,126,196],[245,133,190],[248,141,184],
-    [250,149,178],[252,157,172],[254,165,166],[254,174,161],[254,182,156],
-    [254,190,152],[254,199,148],[254,207,144],[254,216,141],[254,224,139],
-    [253,233,137],[252,241,136],[252,250,136],[253,255,137]
+    [0,0,4],[2,0,9],[5,1,15],[9,1,22],[14,2,30],[20,3,38],[26,3,48],[33,4,57],
+    [40,5,68],[48,6,79],[56,7,90],[64,9,101],[73,10,113],[82,12,124],[91,13,135],
+    [100,15,146],[110,17,157],[120,19,167],[129,21,176],[139,23,185],[149,25,192],
+    [159,28,199],[168,31,204],[178,35,208],[187,40,211],[196,46,213],[204,53,214],
+    [212,60,214],[219,68,212],[226,77,210],[232,87,207],[237,97,204],[241,108,200],
+    [244,119,196],[247,130,191],[249,141,187],[250,152,182],[251,163,177],[252,174,172],
+    [252,184,167],[252,195,162],[253,205,158],[253,215,154],[253,225,151],[253,234,148],
+    [252,243,146],[251,251,145],[252,255,146]
   ],
   inferno: [
-    [0,0,4],[1,0,6],[2,1,9],[3,1,13],[5,2,17],[7,2,21],[9,3,25],[11,3,29],
-    [14,4,34],[16,4,38],[19,5,43],[21,5,48],[24,6,53],[27,7,58],[30,7,63],
-    [33,8,68],[36,9,74],[39,10,79],[42,11,85],[46,11,91],[49,12,97],
-    [52,13,103],[56,14,109],[59,15,115],[63,16,121],[66,17,128],[70,18,134],
-    [74,19,140],[77,20,147],[81,21,153],[85,22,159],[89,23,166],[93,24,172],
-    [97,25,178],[101,27,184],[105,28,190],[110,29,196],[114,31,202],
-    [118,32,208],[122,34,213],[127,36,218],[131,38,223],[136,40,228],
-    [140,43,232],[145,45,236],[150,48,240],[155,51,243],[159,54,246],
-    [164,57,248],[169,61,250],[174,65,251],[179,69,252],[184,73,252],
-    [189,78,251],[194,82,250],[199,87,248],[204,92,246],[208,97,243],
-    [213,102,240],[218,108,237],[222,114,234],[227,120,231],[231,126,228],
-    [235,133,224],[239,139,221],[243,146,218],[246,153,215],[248,161,212],
-    [251,168,210],[252,176,208],[253,184,207],[254,192,206],[254,200,205],
-    [254,208,205],[254,216,205],[254,224,207],[254,232,210],[254,240,214]
-  ],
-  viridis: [
-    [68,1,84],[69,6,90],[70,11,95],[71,16,101],[72,21,106],[72,25,112],
-    [72,30,117],[72,35,122],[71,40,127],[71,44,131],[70,49,136],[70,54,140],
-    [69,58,144],[68,63,148],[67,67,152],[66,72,155],[65,76,159],[64,80,162],
-    [63,85,165],[62,89,168],[61,93,171],[60,97,174],[59,101,177],[58,105,179],
-    [57,109,182],[56,113,184],[55,117,186],[54,120,188],[53,124,190],
-    [52,128,192],[51,131,193],[50,135,195],[49,139,196],[48,142,197],
-    [47,146,198],[46,149,199],[45,153,200],[44,156,201],[43,160,202],
-    [42,163,202],[41,167,203],[40,170,203],[39,174,204],[38,177,204],
-    [37,181,204],[36,184,204],[35,188,204],[34,191,204],[33,195,203],
-    [32,198,203],[31,202,202],[30,205,202],[29,209,201],[28,212,200],
-    [27,216,199],[26,219,198],[25,223,197],[24,226,196],[23,230,194],
-    [22,233,192],[21,237,190],[20,240,188],[19,244,185],[18,247,183],
-    [17,251,180],[16,254,178],[72,253,141],[127,245,100],[181,222,60],
-    [221,194,32],[246,165,15],[254,137,14],[254,109,18],[253,82,28]
+    [0,0,4],[2,1,11],[5,1,20],[10,2,30],[16,2,42],[22,3,54],[29,4,67],[37,4,80],
+    [45,5,93],[53,6,106],[62,8,119],[71,9,131],[80,11,143],[89,13,154],[98,15,165],
+    [107,18,174],[116,20,183],[125,23,190],[134,27,197],[143,31,202],[152,36,207],
+    [161,41,210],[170,47,213],[178,53,215],[187,60,216],[195,67,216],[203,75,215],
+    [210,83,213],[217,92,210],[224,101,206],[230,111,202],[235,121,197],[239,131,191],
+    [243,142,185],[246,153,179],[248,164,173],[249,175,166],[250,186,160],[251,197,153],
+    [251,208,146],[251,218,139],[251,228,132],[251,237,126],[250,245,121],[249,252,117]
   ],
   plasma: [
-    [13,8,135],[17,7,137],[21,6,138],[25,5,140],[28,4,141],[33,3,142],
-    [37,2,143],[41,1,144],[45,1,145],[49,0,146],[53,0,147],[57,0,148],
-    [61,0,149],[65,0,150],[70,0,151],[74,0,152],[78,1,152],[82,2,153],
-    [86,3,153],[91,4,154],[95,7,154],[99,9,155],[103,11,155],[107,14,155],
-    [112,17,156],[116,19,156],[120,22,156],[124,25,156],[128,28,156],
-    [133,31,156],[137,35,156],[141,38,156],[145,41,156],[149,45,155],
-    [154,48,155],[158,52,154],[162,55,154],[166,59,153],[170,63,152],
-    [174,67,151],[178,71,150],[182,75,149],[186,79,148],[190,84,146],
-    [194,88,145],[198,92,144],[202,97,142],[206,101,141],[210,106,139],
-    [214,110,137],[217,115,135],[221,120,133],[224,124,131],[228,129,129],
-    [231,134,127],[234,139,124],[237,144,122],[240,149,119],[243,154,117],
-    [245,160,114],[248,165,111],[250,170,108],[252,176,105],[253,181,102],
-    [254,187,99],[254,192,96],[254,198,93],[254,203,90],[254,209,87],
-    [254,214,84],[253,220,82],[252,225,80],[251,231,78],[249,237,77]
+    [13,8,135],[22,6,139],[32,4,142],[42,3,145],[51,3,148],[61,4,150],[70,6,151],
+    [79,9,152],[88,13,153],[97,18,153],[105,22,153],[114,28,152],[122,33,150],
+    [130,39,148],[138,45,145],[146,51,142],[154,57,139],[162,63,135],[170,70,130],
+    [177,76,126],[185,83,120],[192,90,115],[199,97,109],[206,104,103],[213,111,97],
+    [219,119,91],[226,126,85],[232,134,78],[238,141,72],[243,149,65],[248,157,58],
+    [252,165,51],[254,173,44],[254,181,38],[254,190,32],[253,198,26],[251,206,21],
+    [249,215,17],[246,223,14],[242,231,12],[238,239,12],[233,247,14],[228,254,18]
+  ],
+  viridis: [
+    [68,1,84],[70,12,96],[71,22,106],[71,33,115],[70,43,122],[69,52,128],
+    [67,62,133],[64,72,137],[61,81,139],[59,90,141],[56,99,141],[53,108,141],
+    [51,116,141],[48,124,140],[46,133,138],[44,141,136],[42,149,133],[40,157,129],
+    [39,165,124],[37,173,118],[37,180,111],[38,188,104],[41,195,96],[47,202,87],
+    [54,209,77],[65,215,67],[78,220,57],[93,225,47],[110,230,37],[129,234,28],
+    [148,237,21],[168,240,17],[188,242,16],[208,243,18],[226,244,24],[242,244,34],
+    [253,231,37]
   ],
   cool: [
-    [0,255,255],[7,248,255],[14,241,255],[21,234,255],[28,228,255],
-    [35,221,255],[42,214,255],[49,207,255],[56,201,255],[63,194,255],
-    [70,187,255],[77,180,255],[84,174,255],[91,167,255],[98,160,255],
-    [105,153,255],[112,147,255],[119,140,255],[126,133,255],[133,126,255],
-    [140,119,255],[147,112,255],[154,106,255],[161,99,255],[168,92,255],
-    [175,85,255],[182,78,255],[189,72,255],[196,65,255],[203,58,255],
-    [210,51,255],[217,44,255],[224,38,255],[231,31,255],[238,24,255],
-    [245,17,255],[252,10,255],[255,4,248],[255,0,241],[255,0,234],
-    [255,0,227],[255,0,220],[255,0,213],[255,0,206],[255,0,199],
-    [255,0,193],[255,0,186],[255,0,179],[255,0,172],[255,0,165],
-    [255,0,158],[255,0,151],[255,0,144],[255,0,138],[255,0,131],
-    [255,0,124],[255,0,117],[255,0,110],[255,0,103],[255,0,96],
-    [255,0,89],[255,0,83],[255,0,76],[255,0,69],[255,0,62],
-    [255,0,55],[255,0,48],[255,0,41],[255,0,34],[255,0,27],
-    [255,0,20],[255,0,14],[255,0,7],[255,0,0]
+    [0,255,255],[14,245,255],[28,235,255],[43,225,255],[57,215,255],[71,206,255],
+    [85,196,255],[99,186,255],[113,176,255],[128,166,255],[142,156,255],[156,147,255],
+    [170,137,255],[184,127,255],[198,117,255],[213,107,255],[227,97,255],[241,87,255],
+    [255,78,255],[255,63,241],[255,49,220],[255,35,199],[255,21,178],[255,7,157],
+    [255,0,136],[255,0,115]
   ]
 };
 
 function sampleCmap(name, t) {
-  const c = CMAPS[name];
-  const idx = Math.max(0, Math.min(c.length - 1, Math.round(t * (c.length - 1))));
-  const [r, g, b] = c[idx];
-  return `rgb(${r},${g},${b})`;
+  const c = CMAPS[name] || CMAPS.magma;
+  t = Math.max(0, Math.min(1, t));
+  const idx = Math.round(t * (c.length - 1));
+  return c[idx]; // [r, g, b]
 }
 
-// ── Seeded RNG ─────────────────────────────────────────────────────────────────
-function seededRNG(seed) {
-  let s = seed;
+// ── Seeded RNG ────────────────────────────────────────────────────────────────
+function makeRng(seed) {
+  let s = seed >>> 0;
   return () => {
-    s = (s * 1664525 + 1013904223) & 0xffffffff;
-    return (s >>> 0) / 0xffffffff;
+    s = (Math.imul(1664525, s) + 1013904223) >>> 0;
+    return s / 0x100000000;
   };
 }
 
-// ── Collatz step ───────────────────────────────────────────────────────────────
-function collatzLength(n) {
+// ── Collatz chain length ──────────────────────────────────────────────────────
+function chainLen(n) {
   let len = 0;
   while (n > 1) { n = n % 2 === 0 ? n / 2 : n * 3 + 1; len++; }
   return len;
 }
 
-// ── Main ───────────────────────────────────────────────────────────────────────
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-const status = document.getElementById('status');
+function fmtNum(n) {
+  if (n >= 1e9) return (n / 1e9).toFixed(0) + 'B';
+  if (n >= 1e6) return (n / 1e6).toFixed(0) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(0) + 'K';
+  return String(n);
+}
 
-function setStatus(msg) { status.textContent = msg; }
+function setStatus(msg) { document.getElementById('status').textContent = msg; }
+function tick() { return new Promise(r => setTimeout(r, 0)); }
 
+// ── Main ──────────────────────────────────────────────────────────────────────
 async function run() {
-  const btn = document.getElementById('runBtn');
+  const btn   = document.getElementById('runBtn');
   btn.disabled = true;
 
-  const N = parseInt(document.getElementById('nStarts').value);
-  const MAX = parseInt(document.getElementById('maxVal').value);
-  const theme = document.getElementById('theme').value;
+  const N      = parseInt(document.getElementById('nStarts').value);
+  const MAX    = parseInt(document.getElementById('maxVal').value);
+  const theme  = document.getElementById('theme').value;
+  const ANCHOR = 1024 * 512;
 
+  const canvas = document.getElementById('c');
+  const ctx    = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
+
+  // Fill dark background
   ctx.fillStyle = '#0d0d0d';
   ctx.fillRect(0, 0, W, H);
-  setStatus('Finding longest chain…');
-  await new Promise(r => setTimeout(r, 10));
 
-  // Find longest chain (sample for speed at large MAX)
-  const searchLimit = Math.min(MAX, 200000);
+  // 1. Find longest chain
+  setStatus('Finding longest chain…');
+  await tick();
+  const cap = Math.min(MAX, 200_000);
   let longestStart = 1, longestLen = 0;
-  for (let i = 1; i < searchLimit; i++) {
-    const l = collatzLength(i);
+  for (let i = 1; i <= cap; i++) {
+    const l = chainLen(i);
     if (l > longestLen) { longestLen = l; longestStart = i; }
   }
 
-  // Random starts
-  const rng = seededRNG(42);
-  const allNums = Array.from({length: MAX - 1}, (_, i) => i + 1);
-  // Partial Fisher-Yates for N samples
-  const starts = new Array(N);
+  // 2. Random starts (seeded)
+  setStatus('Sampling starting points…');
+  await tick();
+  const rng  = makeRng(42);
+  const pool = [];
+  for (let i = 1; i <= MAX; i++) pool.push(i);
+  const starts = [];
   for (let i = 0; i < N; i++) {
-    const j = i + Math.floor(rng() * (allNums.length - i));
-    [allNums[i], allNums[j]] = [allNums[j], allNums[i]];
-    starts[i] = allNums[i];
+    const j = i + Math.floor(rng() * (pool.length - i));
+    const tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    starts.push(pool[i]);
   }
-  starts[0] = 1024 * 512;
+  starts[0] = ANCHOR;
   starts[1] = longestStart;
 
-  setStatus('Building Collatz tree…');
-  await new Promise(r => setTimeout(r, 10));
-
-  // Build edge map: key = `${dest},${src}` → count
-  const edgeMap = new Map();
-  const adjFrom = new Map(); // dest → [{src, key}]
+  // 3. Build edge counts + adjacency
+  const edgeCount = new Map(); // `${dest},${src}` → count
+  const adjFrom   = new Map(); // dest → Set<src>
 
   for (let si = 0; si < starts.length; si++) {
     let pos = starts[si];
     while (pos > 1) {
       const next = pos % 2 === 0 ? pos / 2 : pos * 3 + 1;
-      const key = `${next},${pos}`;
-      edgeMap.set(key, (edgeMap.get(key) || 0) + 1);
-      if (!adjFrom.has(next)) adjFrom.set(next, []);
-      adjFrom.get(next).push({src: pos, key});
+      const key  = next + ',' + pos;
+      edgeCount.set(key, (edgeCount.get(key) || 0) + 1);
+      if (!adjFrom.has(next)) adjFrom.set(next, new Set());
+      adjFrom.get(next).add(pos);
       pos = next;
     }
-    if (si % 500 === 0) {
-      setStatus(`Building tree… ${Math.round(si/starts.length*100)}%`);
-      await new Promise(r => setTimeout(r, 0));
+    if (si % 400 === 0) {
+      setStatus('Building tree… ' + Math.round(si / N * 100) + '%');
+      await tick();
     }
   }
 
-  // Deduplicate adjacency lists
-  for (const [dest, list] of adjFrom) {
-    const seen = new Set();
-    adjFrom.set(dest, list.filter(e => seen.has(e.src) ? false : seen.add(e.src)));
-  }
+  let maxCount = 0;
+  for (const v of edgeCount.values()) if (v > maxCount) maxCount = v;
+  const logMax = Math.log1p(maxCount);
 
-  const maxCount = Math.max(...edgeMap.values());
-  const logMaxCount = Math.log1p(maxCount);
+  // 4. DFS layout
+  setStatus('Computing layout…');
+  await tick();
 
-  setStatus('Rendering tree…');
-  await new Promise(r => setTimeout(r, 10));
+  const RAD_EVEN =  8.65 * Math.PI / 180;
+  const RAD_ODD  = -16   * Math.PI / 180;
 
-  // DFS to compute positions
   const nodePos = new Map(); // node → {x, y, col}
-  const segments = [];
+  nodePos.set(1, { x: 0, y: 0, col: 0 });
 
-  // We'll scale to canvas after computing raw coords
-  const RAD_EVEN = 8.65 * Math.PI / 180;
-  const RAD_ODD  = -16  * Math.PI / 180;
+  const segs = []; // {x1,y1,x2,y2,col}
+  const stk  = [{ node: 1, x: 0, y: 0, angle: 0 }];
 
-  const stack = [{node: 1, x: 0, y: 0, angle: 0}];
-  nodePos.set(1, {x: 0, y: 0, col: 0});
-
-  while (stack.length) {
-    const {node, x, y, angle} = stack.pop();
-    const children = adjFrom.get(node) || [];
-    for (const {src, key} of children) {
+  while (stk.length) {
+    const { node, x, y, angle } = stk.pop();
+    const children = adjFrom.get(node);
+    if (!children) continue;
+    for (const src of children) {
       const newAngle = src % 2 === 0 ? angle + RAD_EVEN : angle + RAD_ODD;
-      const step = 1 / Math.log(Math.max(src, 2));
+      const step     = 1 / Math.log(Math.max(src, 2));
       const nx = x + Math.cos(newAngle) * step;
       const ny = y + Math.sin(newAngle) * step;
-      const count = edgeMap.get(key) || 0;
-      const col = Math.log1p(count) / logMaxCount;
-      segments.push({x1: x, y1: y, x2: nx, y2: ny, col});
-      nodePos.set(src, {x: nx, y: ny, col});
-      stack.push({node: src, x: nx, y: ny, angle: newAngle});
+      const count = edgeCount.get(node + ',' + src) || 0;
+      const col   = Math.log1p(count) / logMax;
+      segs.push({ x1: x, y1: y, x2: nx, y2: ny, col });
+      nodePos.set(src, { x: nx, y: ny, col });
+      stk.push({ node: src, x: nx, y: ny, angle: newAngle });
     }
   }
 
-  // Compute bounding box then map to canvas
+  // 5. Bounding box → canvas scale
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  for (const {x1,y1,x2,y2} of segments) {
-    minX = Math.min(minX,x1,x2); maxX = Math.max(maxX,x1,x2);
-    minY = Math.min(minY,y1,y2); maxY = Math.max(maxY,y1,y2);
+  for (const { x1, y1, x2, y2 } of segs) {
+    if (x1 < minX) minX = x1; if (x1 > maxX) maxX = x1;
+    if (x2 < minX) minX = x2; if (x2 > maxX) maxX = x2;
+    if (y1 < minY) minY = y1; if (y1 > maxY) maxY = y1;
+    if (y2 < minY) minY = y2; if (y2 > maxY) maxY = y2;
   }
-
-  const PAD = 80;
-  const scaleX = (W - PAD*2) / (maxX - minX || 1);
-  const scaleY = (H - PAD*2) / (maxY - minY || 1);
+  const PAD   = 110;
+  const scaleX = (W - PAD * 2) / (maxX - minX || 1);
+  const scaleY = (H - PAD * 2) / (maxY - minY || 1);
   const scale  = Math.min(scaleX, scaleY);
-  const offX   = PAD + (W - PAD*2 - (maxX-minX)*scale) / 2 - minX * scale;
-  const offY   = PAD + (H - PAD*2 - (maxY-minY)*scale) / 2 - minY * scale;
+  const offX   = PAD + (W - PAD * 2 - (maxX - minX) * scale) / 2 - minX * scale;
+  const offY   = PAD + (H - PAD * 2 - (maxY - minY) * scale) / 2 - minY * scale;
+  const px = x => x * scale + offX;
+  const py = y => y * scale + offY;
 
-  const toCanvas = (x, y) => [x * scale + offX, y * scale + offY];
+  // 6. Draw edges (cold → hot order so hot edges paint on top)
+  setStatus('Rendering…');
+  await tick();
+  segs.sort((a, b) => a.col - b.col);
 
-  // Draw segments
-  for (const {x1,y1,x2,y2,col} of segments) {
-    const [cx1, cy1] = toCanvas(x1, y1);
-    const [cx2, cy2] = toCanvas(x2, y2);
+  for (const { x1, y1, x2, y2, col } of segs) {
+    const [r, g, b] = sampleCmap(theme, 0.15 + col * 0.85);
+    const alpha = Math.max(0.15, col ** 0.5).toFixed(2);
     ctx.beginPath();
-    ctx.moveTo(cx1, cy1);
-    ctx.lineTo(cx2, cy2);
-	ctx.strokeStyle = sampleCmap(theme, 0.15 + col*0.85);
-    ctx.lineWidth = Math.max(0.3, 2.5 * col);
+    ctx.moveTo(px(x1), py(y1));
+    ctx.lineTo(px(x2), py(y2));
+    ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+    ctx.lineWidth   = Math.max(0.4, 2.5 * col);
     ctx.stroke();
   }
 
-  // Labels helper
-  const label = (node, txt, dx, dy, align) => {
-    const pos = nodePos.get(node);
-    if (!pos) return;
-    const [cx, cy] = toCanvas(pos.x, pos.y);
-    ctx.fillStyle = sampleCmap(theme, 1 - pos.col);
-    ctx.font = '11px Georgia';
-    ctx.textAlign = align || 'right';
-    ctx.fillText(txt, cx + dx, cy + dy);
-  };
+  // 7. Labels helper
+  function drawLabel(node, lines, dx, dy, align) {
+    const p = nodePos.get(node);
+    if (!p) return;
+    const [r, g, b] = sampleCmap(theme, 0.15 + p.col * 0.85);
+    const lx = px(p.x), ly = py(p.y);
 
-  // Anchor
-  label(1024*512, `2¹⁹ = 524,288`, -6, -6, 'right');
+    // Halo + dot
+    ctx.beginPath();
+    ctx.arc(lx, ly, 9, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${r},${g},${b},0.15)`;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${r},${g},${b},0.9)`;
+    ctx.fill();
 
-  // Longest chain
-  const lLabel = `${longestStart.toLocaleString()} — longest chain (${longestLen} steps)`;
-  label(longestStart, lLabel, -6, -6, 'right');
-
-  // Top branching nodes
-  const branchCount = new Map();
-  for (const [key] of edgeMap) {
-    const dest = parseInt(key.split(',')[0]);
-    branchCount.set(dest, (branchCount.get(dest) || 0) + 1);
+    // Text lines
+    ctx.fillStyle  = `rgba(${r},${g},${b},0.92)`;
+    ctx.textAlign  = align || 'right';
+    ctx.textBaseline = 'top';
+    ctx.font = '18px Georgia, serif';
+    const lh = 20;
+    lines.forEach((line, i) => ctx.fillText(line, lx + dx, ly + dy + i * lh));
   }
-  const topNodes = [...branchCount.entries()]
-    .sort((a,b) => b[1]-a[1])
-    .map(([n]) => n)
-    .filter(n => n !== 1 && n !== 1024*512 && n !== longestStart)
-    .slice(0, 3);
-  for (const n of topNodes) label(n, n.toLocaleString(), 0, 14, 'center');
 
   // Root
-  const [rx, ry] = toCanvas(0, 0);
-  ctx.fillStyle = sampleCmap(theme, 0);
-  ctx.font = '11px Georgia';
-  ctx.textAlign = 'center';
-  ctx.fillText('1', rx, ry + 14);
+  drawLabel(1, ['1'], 0, 10, 'center');
+  // Anchor
+  drawLabel(ANCHOR, ['2¹⁹ = ' + ANCHOR.toLocaleString()], -12, -42, 'right');
+  // Longest
+  drawLabel(longestStart, [
+    longestStart.toLocaleString(),
+    'Longest below ' + fmtNum(MAX),
+    '(' + longestLen + ' steps)',
+  ], -12, -66, 'right');
 
-  // Title block (top-right area)
-  const fmt = n => n >= 1e9 ? `${n/1e9}B` : n >= 1e6 ? `${n/1e6}M` : n >= 1e3 ? `${n/1e3}K` : n;
-  const titleX = W - PAD - 10;
-  ctx.textAlign = 'right';
-  ctx.font = 'bold 28px Georgia';
-  ctx.fillStyle = sampleCmap(theme, 0.2);
-  ctx.fillText('Collatz conjecture paths', titleX, PAD + 30);
-  ctx.font = '15px Georgia';
-  ctx.fillStyle = sampleCmap(theme, 0.5);
-  ctx.fillText(`${N.toLocaleString()} random starting points below ${fmt(MAX)}`, titleX, PAD + 54);
-  ctx.font = '11px Georgia';
-  ctx.fillStyle = sampleCmap(theme, 0.7);
-  const caption = [
-    'Left +8.65° for even nodes · Right −16° for odd nodes',
-    'Edge length ∝ 1/log(value) · Color & width ∝ log(traversal count)',
-  ];
-  caption.forEach((line, i) => ctx.fillText(line, titleX, PAD + 80 + i * 17));
+  // Top junctions
+  const branchDeg = new Map();
+  for (const key of edgeCount.keys()) {
+    const dest = +key.split(',')[0];
+    branchDeg.set(dest, (branchDeg.get(dest) || 0) + 1);
+  }
+  const topNodes = [...branchDeg.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([n]) => n)
+    .filter(n => n !== 1 && n !== ANCHOR && n !== longestStart)
+    .slice(0, 3);
+  for (const n of topNodes) drawLabel(n, [n.toLocaleString()], 0, 10, 'center');
 
-  setStatus(`Done — ${segments.length.toLocaleString()} unique edges · longest chain: ${longestStart.toLocaleString()} (${longestLen} steps)`);
+  // 8. Title block
+  ctx.textBaseline = 'top';
+  ctx.textAlign    = 'right';
+  const tx = W - PAD + 20;
+
+  const [tr, tg, tb] = sampleCmap(theme, 0.92);
+  ctx.font      = 'bold 34px Georgia, serif';
+  ctx.fillStyle = `rgb(${tr},${tg},${tb})`;
+  ctx.fillText('Collatz conjecture paths', tx, PAD - 60);
+
+  const [sr, sg, sb] = sampleCmap(theme, 0.68);
+  ctx.font      = '19px Georgia, serif';
+  ctx.fillStyle = `rgb(${sr},${sg},${sb})`;
+  ctx.fillText(N.toLocaleString() + ' random starting points below ' + fmtNum(MAX), tx, PAD - 18);
+
+  const [cr, cg, cb] = sampleCmap(theme, 0.45);
+  ctx.font      = '14px Georgia, serif';
+  ctx.fillStyle = `rgb(${cr},${cg},${cb})`;
+  [
+    'Left +8.65° (even) · Right −16° (odd)',
+    'Length ∝ 1/log(node value)',
+    'Brightness & width ∝ log(traversal count)',
+  ].forEach((line, i) => ctx.fillText(line, tx, PAD + 20 + i * 18));
+
+  setStatus('Done — ' + segs.length.toLocaleString() + ' segments · longest chain: '
+    + longestStart.toLocaleString() + ' (' + longestLen + ' steps)');
   btn.disabled = false;
 }
 
-// ── Slider readout ─────────────────────────────────────────────────────────────
-const slider = document.getElementById('nStarts');
-const sliderVal = document.getElementById('nStartsVal');
-slider.addEventListener('input', () => {
-  sliderVal.textContent = parseInt(slider.value).toLocaleString();
+document.getElementById('nStarts').addEventListener('input', function () {
+  document.getElementById('nStartsVal').textContent =
+    parseInt(this.value).toLocaleString();
 });
 
 document.getElementById('runBtn').addEventListener('click', run);

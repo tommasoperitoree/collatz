@@ -216,11 +216,6 @@ def __(
 
 		filename = f"collatz-{fmt_max(MAX_VAL).replace(' ', '')}-{N_STARTS}.png"
 		import io, base64
-		
-		# Save high-res to disk
-		fig.savefig(filename, dpi=600, facecolor="#0d0d0d")
-		
-		# Encode a lightweight version for inline display
 		buf = io.BytesIO()
 		fig.savefig(buf, format='png', dpi=150, facecolor="#0d0d0d")
 		buf.seek(0)
