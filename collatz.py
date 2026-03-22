@@ -24,30 +24,37 @@ def _(mo):
 
 
 @app.cell
-def _(mo):
-    n_starts_slider = mo.ui.slider(
-        100, 10_000, value=5_000, step=100,
-        label="Number of starting points"
+def __(mo):
+    form = (
+        mo.ui.form(
+            mo.hstack([
+                mo.ui.slider(
+                    100, 10_000, value=5_000, step=100,
+                    label="Number of starting points"
+                ),
+                mo.ui.dropdown(
+                    options={
+                        "100 thousand":  100_000,
+                        "500 thousand":  500_000,
+                        "1 million":   1_000_000,
+                        "5 million":   5_000_000,
+                        "10 million": 10_000_000,
+                    },
+                    value="1 million",
+                    label="Max starting value",
+                ),
+            ], justify="start", gap=2),
+            submit_button_label="▶ Run",
+        )
     )
-    max_val_dropdown = mo.ui.dropdown(
-        options={
-            "100 thousand":   100_000,
-            "500 thousand":   500_000,
-            "1 million":    1_000_000,
-            "5 million":    5_000_000,
-            "10 million":  10_000_000,
-        },
-        value="1 million",
-        label="Max starting value",
-    )
-    mo.hstack([n_starts_slider, max_val_dropdown], justify="start", gap=2)
-    return max_val_dropdown, n_starts_slider
+    form
+    return form,
 
 
 @app.cell
-def _(max_val_dropdown, mo, n_starts_slider, np):
-    N_STARTS = n_starts_slider.value
-    MAX_VAL  = max_val_dropdown.value
+def __(form, mo, np):
+    N_STARTS = (form.value or {}).get("slider", 5_000)    # fallback before first submit
+    MAX_VAL  = (form.value or {}).get("dropdown", 1_000_000)
 
     with mo.status.spinner(title=f"Finding longest chain below {MAX_VAL:,}…"):
 

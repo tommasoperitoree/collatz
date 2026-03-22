@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collatz Conjecture Explorer</title>
+<style>
+  :root {
+    --bg: #0f0f13;
+    --surface: #1a1a24;
+    --border: #2e2e42;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --accent: #c084fc;
+    --accent2: #f59e0b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Georgia', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2rem;
+    max-width: 700px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  header p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-end;
+    justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.75rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 860px;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 180px;
+  }
+
+  label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: monospace;
+  }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 180px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+
+  select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: monospace;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+    width: 180px;
+  }
+
+  .val {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--accent2);
+  }
+
+  button {
+    background: var(--accent);
+    color: #0f0f13;
+    border: none;
+    border-radius: 8px;
+    padding: 0.55rem 1.4rem;
+    font-size: 0.9rem;
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    align-self: flex-end;
+  }
+  button:hover { opacity: 0.85; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .canvas-wrap {
+    width: 100%;
+    max-width: 860px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .status {
+    margin-top: 0.75rem;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    min-height: 1.2em;
+    text-align: center;
+  }
+
+  .legend {
+    margin-top: 1.25rem;
+    max-width: 860px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .legend-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .legend-item strong { color: var(--text); display: block; margin-bottom: 0.2rem; }
+
+  footer {
+    margin-top: 2.5rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌿 Collatz Conjecture Explorer</h1>
+  <p>
+    Take any positive integer. If even, halve it. If odd, multiply by 3 and add 1.<br>
+    Every number ever tried eventually reaches 1 — but nobody has proved it must.
+  </p>
+</header>
+
+<div class="controls">
+  <div class="control-group">
+    <label>Starting points</label>
+    <input type="range" id="nStarts" min="100" max="5000" step="100" value="2000">
+    <span class="val" id="nStartsVal">2,000</span>
+  </div>
+  <div class="control-group">
+    <label>Max starting value</label>
+    <select id="maxVal">
+      <option value="100000">100 thousand</option>
+      <option value="500000">500 thousand</option>
+      <option value="1000000" selected>1 million</option>
+      <option value="5000000">5 million</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Color theme</label>
+    <select id="theme">
+      <option value="magma">Magma (default)</option>
+      <option value="viridis">Viridis</option>
+      <option value="inferno">Inferno</option>
+      <option value="plasma">Plasma</option>
+      <option value="cool">Cool (blue→pink)</option>
+    </select>
+  </div>
+  <button id="runBtn">▶ Run</button>
+</div>
+
+<div class="canvas-wrap">
+  <canvas id="c" width="1720" height="966"></canvas>
+</div>
+
+<div class="status" id="status">Adjust parameters and click ▶ Run</div>
+
+<div class="legend">
+  <div class="legend-item">
+    <strong>Branch angles</strong>
+    Left +8.65° for even nodes · Right −16° for odd nodes
+  </div>
+  <div class="legend-item">
+    <strong>Edge length</strong>
+    Shrinks as 1 / log(node value) — large numbers cluster near root
+  </div>
+  <div class="legend-item">
+    <strong>Color & thickness</strong>
+    Bright / thick = many chains passed here · Dark / thin = rarely visited
+  </div>
+  <div class="legend-item">
+    <strong>Annotations</strong>
+    2¹⁹ (fastest collapse) · longest chain · top 3 branching junctions
+  </div>
+</div>
+
+<footer>
+  <a href="https://github.com/tommasoperitoree/collatz">GitHub</a> ·
+  <a href="https://marimo.app/github/tommasoperitoree/collatz/blob/main/collatz.py">Open in marimo</a>
+</footer>
+
+<script>
+// ── Colormaps (sampled from matplotlib) ───────────────────────────────────────
+const CMAPS = {
+  magma: [
+    [0,0,4],[1,0,5],[2,1,9],[4,1,13],[6,2,17],[8,2,22],[11,3,27],[14,4,32],
+    [17,4,37],[20,5,43],[23,6,49],[27,6,55],[30,7,62],[34,8,68],[38,9,75],
+    [42,10,82],[46,11,89],[50,11,96],[55,12,103],[59,13,111],[64,14,118],
+    [68,15,126],[73,16,134],[78,17,142],[83,18,150],[87,19,158],[92,20,166],
+    [97,21,174],[102,22,182],[108,23,190],[113,24,198],[118,26,205],
+    [124,27,213],[130,28,221],[136,29,228],[142,31,235],[148,33,241],
+    [154,35,247],[161,37,252],[167,40,255],[174,43,255],[180,47,254],
+    [186,51,252],[192,56,249],[197,61,246],[202,67,242],[207,72,238],
+    [212,78,234],[216,84,229],[221,91,224],[225,97,219],[229,104,214],
+    [233,111,208],[237,118,202],[241,126,196],[245,133,190],[248,141,184],
+    [250,149,178],[252,157,172],[254,165,166],[254,174,161],[254,182,156],
+    [254,190,152],[254,199,148],[254,207,144],[254,216,141],[254,224,139],
+    [253,233,137],[252,241,136],[252,250,136],[253,255,137]
+  ],
+  inferno: [
+    [0,0,4],[1,0,6],[2,1,9],[3,1,13],[5,2,17],[7,2,21],[9,3,25],[11,3,29],
+    [14,4,34],[16,4,38],[19,5,43],[21,5,48],[24,6,53],[27,7,58],[30,7,63],
+    [33,8,68],[36,9,74],[39,10,79],[42,11,85],[46,11,91],[49,12,97],
+    [52,13,103],[56,14,109],[59,15,115],[63,16,121],[66,17,128],[70,18,134],
+    [74,19,140],[77,20,147],[81,21,153],[85,22,159],[89,23,166],[93,24,172],
+    [97,25,178],[101,27,184],[105,28,190],[110,29,196],[114,31,202],
+    [118,32,208],[122,34,213],[127,36,218],[131,38,223],[136,40,228],
+    [140,43,232],[145,45,236],[150,48,240],[155,51,243],[159,54,246],
+    [164,57,248],[169,61,250],[174,65,251],[179,69,252],[184,73,252],
+    [189,78,251],[194,82,250],[199,87,248],[204,92,246],[208,97,243],
+    [213,102,240],[218,108,237],[222,114,234],[227,120,231],[231,126,228],
+    [235,133,224],[239,139,221],[243,146,218],[246,153,215],[248,161,212],
+    [251,168,210],[252,176,208],[253,184,207],[254,192,206],[254,200,205],
+    [254,208,205],[254,216,205],[254,224,207],[254,232,210],[254,240,214]
+  ],
+  viridis: [
+    [68,1,84],[69,6,90],[70,11,95],[71,16,101],[72,21,106],[72,25,112],
+    [72,30,117],[72,35,122],[71,40,127],[71,44,131],[70,49,136],[70,54,140],
+    [69,58,144],[68,63,148],[67,67,152],[66,72,155],[65,76,159],[64,80,162],
+    [63,85,165],[62,89,168],[61,93,171],[60,97,174],[59,101,177],[58,105,179],
+    [57,109,182],[56,113,184],[55,117,186],[54,120,188],[53,124,190],
+    [52,128,192],[51,131,193],[50,135,195],[49,139,196],[48,142,197],
+    [47,146,198],[46,149,199],[45,153,200],[44,156,201],[43,160,202],
+    [42,163,202],[41,167,203],[40,170,203],[39,174,204],[38,177,204],
+    [37,181,204],[36,184,204],[35,188,204],[34,191,204],[33,195,203],
+    [32,198,203],[31,202,202],[30,205,202],[29,209,201],[28,212,200],
+    [27,216,199],[26,219,198],[25,223,197],[24,226,196],[23,230,194],
+    [22,233,192],[21,237,190],[20,240,188],[19,244,185],[18,247,183],
+    [17,251,180],[16,254,178],[72,253,141],[127,245,100],[181,222,60],
+    [221,194,32],[246,165,15],[254,137,14],[254,109,18],[253,82,28]
+  ],
+  plasma: [
+    [13,8,135],[17,7,137],[21,6,138],[25,5,140],[28,4,141],[33,3,142],
+    [37,2,143],[41,1,144],[45,1,145],[49,0,146],[53,0,147],[57,0,148],
+    [61,0,149],[65,0,150],[70,0,151],[74,0,152],[78,1,152],[82,2,153],
+    [86,3,153],[91,4,154],[95,7,154],[99,9,155],[103,11,155],[107,14,155],
+    [112,17,156],[116,19,156],[120,22,156],[124,25,156],[128,28,156],
+    [133,31,156],[137,35,156],[141,38,156],[145,41,156],[149,45,155],
+    [154,48,155],[158,52,154],[162,55,154],[166,59,153],[170,63,152],
+    [174,67,151],[178,71,150],[182,75,149],[186,79,148],[190,84,146],
+    [194,88,145],[198,92,144],[202,97,142],[206,101,141],[210,106,139],
+    [214,110,137],[217,115,135],[221,120,133],[224,124,131],[228,129,129],
+    [231,134,127],[234,139,124],[237,144,122],[240,149,119],[243,154,117],
+    [245,160,114],[248,165,111],[250,170,108],[252,176,105],[253,181,102],
+    [254,187,99],[254,192,96],[254,198,93],[254,203,90],[254,209,87],
+    [254,214,84],[253,220,82],[252,225,80],[251,231,78],[249,237,77]
+  ],
+  cool: [
+    [0,255,255],[7,248,255],[14,241,255],[21,234,255],[28,228,255],
+    [35,221,255],[42,214,255],[49,207,255],[56,201,255],[63,194,255],
+    [70,187,255],[77,180,255],[84,174,255],[91,167,255],[98,160,255],
+    [105,153,255],[112,147,255],[119,140,255],[126,133,255],[133,126,255],
+    [140,119,255],[147,112,255],[154,106,255],[161,99,255],[168,92,255],
+    [175,85,255],[182,78,255],[189,72,255],[196,65,255],[203,58,255],
+    [210,51,255],[217,44,255],[224,38,255],[231,31,255],[238,24,255],
+    [245,17,255],[252,10,255],[255,4,248],[255,0,241],[255,0,234],
+    [255,0,227],[255,0,220],[255,0,213],[255,0,206],[255,0,199],
+    [255,0,193],[255,0,186],[255,0,179],[255,0,172],[255,0,165],
+    [255,0,158],[255,0,151],[255,0,144],[255,0,138],[255,0,131],
+    [255,0,124],[255,0,117],[255,0,110],[255,0,103],[255,0,96],
+    [255,0,89],[255,0,83],[255,0,76],[255,0,69],[255,0,62],
+    [255,0,55],[255,0,48],[255,0,41],[255,0,34],[255,0,27],
+    [255,0,20],[255,0,14],[255,0,7],[255,0,0]
+  ]
+};
+
+function sampleCmap(name, t) {
+  const c = CMAPS[name];
+  const idx = Math.max(0, Math.min(c.length - 1, Math.round(t * (c.length - 1))));
+  const [r, g, b] = c[idx];
+  return `rgb(${r},${g},${b})`;
+}
+
+// ── Seeded RNG ─────────────────────────────────────────────────────────────────
+function seededRNG(seed) {
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
+// ── Collatz step ───────────────────────────────────────────────────────────────
+function collatzLength(n) {
+  let len = 0;
+  while (n > 1) { n = n % 2 === 0 ? n / 2 : n * 3 + 1; len++; }
+  return len;
+}
+
+// ── Main ───────────────────────────────────────────────────────────────────────
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const status = document.getElementById('status');
+
+function setStatus(msg) { status.textContent = msg; }
+
+async function run() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+
+  const N = parseInt(document.getElementById('nStarts').value);
+  const MAX = parseInt(document.getElementById('maxVal').value);
+  const theme = document.getElementById('theme').value;
+
+  const W = canvas.width, H = canvas.height;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+
+  setStatus('Finding longest chain…');
+  await new Promise(r => setTimeout(r, 10));
+
+  // Find longest chain (sample for speed at large MAX)
+  const searchLimit = Math.min(MAX, 200000);
+  let longestStart = 1, longestLen = 0;
+  for (let i = 1; i < searchLimit; i++) {
+    const l = collatzLength(i);
+    if (l > longestLen) { longestLen = l; longestStart = i; }
+  }
+
+  // Random starts
+  const rng = seededRNG(42);
+  const allNums = Array.from({length: MAX - 1}, (_, i) => i + 1);
+  // Partial Fisher-Yates for N samples
+  const starts = new Array(N);
+  for (let i = 0; i < N; i++) {
+    const j = i + Math.floor(rng() * (allNums.length - i));
+    [allNums[i], allNums[j]] = [allNums[j], allNums[i]];
+    starts[i] = allNums[i];
+  }
+  starts[0] = 1024 * 512;
+  starts[1] = longestStart;
+
+  setStatus('Building Collatz tree…');
+  await new Promise(r => setTimeout(r, 10));
+
+  // Build edge map: key = `${dest},${src}` → count
+  const edgeMap = new Map();
+  const adjFrom = new Map(); // dest → [{src, key}]
+
+  for (let si = 0; si < starts.length; si++) {
+    let pos = starts[si];
+    while (pos > 1) {
+      const next = pos % 2 === 0 ? pos / 2 : pos * 3 + 1;
+      const key = `${next},${pos}`;
+      edgeMap.set(key, (edgeMap.get(key) || 0) + 1);
+      if (!adjFrom.has(next)) adjFrom.set(next, []);
+      adjFrom.get(next).push({src: pos, key});
+      pos = next;
+    }
+    if (si % 500 === 0) {
+      setStatus(`Building tree… ${Math.round(si/starts.length*100)}%`);
+      await new Promise(r => setTimeout(r, 0));
+    }
+  }
+
+  // Deduplicate adjacency lists
+  for (const [dest, list] of adjFrom) {
+    const seen = new Set();
+    adjFrom.set(dest, list.filter(e => seen.has(e.src) ? false : seen.add(e.src)));
+  }
+
+  const maxCount = Math.max(...edgeMap.values());
+  const logMaxCount = Math.log1p(maxCount);
+
+  setStatus('Rendering tree…');
+  await new Promise(r => setTimeout(r, 10));
+
+  // DFS to compute positions
+  const nodePos = new Map(); // node → {x, y, col}
+  const segments = [];
+
+  // We'll scale to canvas after computing raw coords
+  const RAD_EVEN = 8.65 * Math.PI / 180;
+  const RAD_ODD  = -16  * Math.PI / 180;
+
+  const stack = [{node: 1, x: 0, y: 0, angle: 0}];
+  nodePos.set(1, {x: 0, y: 0, col: 0});
+
+  while (stack.length) {
+    const {node, x, y, angle} = stack.pop();
+    const children = adjFrom.get(node) || [];
+    for (const {src, key} of children) {
+      const newAngle = src % 2 === 0 ? angle + RAD_EVEN : angle + RAD_ODD;
+      const step = 1 / Math.log(Math.max(src, 2));
+      const nx = x + Math.cos(newAngle) * step;
+      const ny = y + Math.sin(newAngle) * step;
+      const count = edgeMap.get(key) || 0;
+      const col = Math.log1p(count) / logMaxCount;
+      segments.push({x1: x, y1: y, x2: nx, y2: ny, col});
+      nodePos.set(src, {x: nx, y: ny, col});
+      stack.push({node: src, x: nx, y: ny, angle: newAngle});
+    }
+  }
+
+  // Compute bounding box then map to canvas
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const {x1,y1,x2,y2} of segments) {
+    minX = Math.min(minX,x1,x2); maxX = Math.max(maxX,x1,x2);
+    minY = Math.min(minY,y1,y2); maxY = Math.max(maxY,y1,y2);
+  }
+
+  const PAD = 80;
+  const scaleX = (W - PAD*2) / (maxX - minX || 1);
+  const scaleY = (H - PAD*2) / (maxY - minY || 1);
+  const scale  = Math.min(scaleX, scaleY);
+  const offX   = PAD + (W - PAD*2 - (maxX-minX)*scale) / 2 - minX * scale;
+  const offY   = PAD + (H - PAD*2 - (maxY-minY)*scale) / 2 - minY * scale;
+
+  const toCanvas = (x, y) => [x * scale + offX, y * scale + offY];
+
+  // Draw segments
+  for (const {x1,y1,x2,y2,col} of segments) {
+    const [cx1, cy1] = toCanvas(x1, y1);
+    const [cx2, cy2] = toCanvas(x2, y2);
+    ctx.beginPath();
+    ctx.moveTo(cx1, cy1);
+    ctx.lineTo(cx2, cy2);
+    ctx.strokeStyle = sampleCmap(theme, 1 - col);
+    ctx.lineWidth = Math.max(0.3, 2.5 * col);
+    ctx.stroke();
+  }
+
+  // Labels helper
+  const label = (node, txt, dx, dy, align) => {
+    const pos = nodePos.get(node);
+    if (!pos) return;
+    const [cx, cy] = toCanvas(pos.x, pos.y);
+    ctx.fillStyle = sampleCmap(theme, 1 - pos.col);
+    ctx.font = '11px Georgia';
+    ctx.textAlign = align || 'right';
+    ctx.fillText(txt, cx + dx, cy + dy);
+  };
+
+  // Anchor
+  label(1024*512, `2¹⁹ = 524,288`, -6, -6, 'right');
+
+  // Longest chain
+  const lLabel = `${longestStart.toLocaleString()} — longest chain (${longestLen} steps)`;
+  label(longestStart, lLabel, -6, -6, 'right');
+
+  // Top branching nodes
+  const branchCount = new Map();
+  for (const [key] of edgeMap) {
+    const dest = parseInt(key.split(',')[0]);
+    branchCount.set(dest, (branchCount.get(dest) || 0) + 1);
+  }
+  const topNodes = [...branchCount.entries()]
+    .sort((a,b) => b[1]-a[1])
+    .map(([n]) => n)
+    .filter(n => n !== 1 && n !== 1024*512 && n !== longestStart)
+    .slice(0, 3);
+  for (const n of topNodes) label(n, n.toLocaleString(), 0, 14, 'center');
+
+  // Root
+  const [rx, ry] = toCanvas(0, 0);
+  ctx.fillStyle = sampleCmap(theme, 0);
+  ctx.font = '11px Georgia';
+  ctx.textAlign = 'center';
+  ctx.fillText('1', rx, ry + 14);
+
+  // Title block (top-right area)
+  const fmt = n => n >= 1e9 ? `${n/1e9}B` : n >= 1e6 ? `${n/1e6}M` : n >= 1e3 ? `${n/1e3}K` : n;
+  const titleX = W - PAD - 10;
+  ctx.textAlign = 'right';
+  ctx.font = 'bold 28px Georgia';
+  ctx.fillStyle = sampleCmap(theme, 0.2);
+  ctx.fillText('Collatz conjecture paths', titleX, PAD + 30);
+  ctx.font = '15px Georgia';
+  ctx.fillStyle = sampleCmap(theme, 0.5);
+  ctx.fillText(`${N.toLocaleString()} random starting points below ${fmt(MAX)}`, titleX, PAD + 54);
+  ctx.font = '11px Georgia';
+  ctx.fillStyle = sampleCmap(theme, 0.7);
+  const caption = [
+    'Left +8.65° for even nodes · Right −16° for odd nodes',
+    'Edge length ∝ 1/log(value) · Color & width ∝ log(traversal count)',
+  ];
+  caption.forEach((line, i) => ctx.fillText(line, titleX, PAD + 80 + i * 17));
+
+  setStatus(`Done — ${segments.length.toLocaleString()} unique edges · longest chain: ${longestStart.toLocaleString()} (${longestLen} steps)`);
+  btn.disabled = false;
+}
+
+// ── Slider readout ─────────────────────────────────────────────────────────────
+const slider = document.getElementById('nStarts');
+const sliderVal = document.getElementById('nStartsVal');
+slider.addEventListener('input', () => {
+  sliderVal.textContent = parseInt(slider.value).toLocaleString();
+});
+
+document.getElementById('runBtn').addEventListener('click', run);
+</script>
+</body>
+</html>
