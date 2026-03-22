@@ -397,7 +397,7 @@ async function run() {
       stk.push({ node: src, x: nx, y: ny, angle: newAngle });
     }
   }
-
+  
   // 5. Bounding box → canvas scale
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
   for (const { x1, y1, x2, y2 } of segs) {
@@ -406,14 +406,21 @@ async function run() {
     if (y1 < minY) minY = y1; if (y1 > maxY) maxY = y1;
     if (y2 < minY) minY = y2; if (y2 > maxY) maxY = y2;
   }
-  const PAD    = 80;
-  const scaleX = (W - PAD * 2) / (maxX - minX || 1);
-  const scaleY = (H - PAD * 2) / (maxY - minY || 1);
-  const scale  = Math.min(scaleX, scaleY) * 0.85; // slight margin for labels
-  const offX   = (W - (maxX - minX) * scale) / 2 - minX * scale;
-  const offY   = (H - (maxY - minY) * scale) / 2 - minY * scale;
+  
+  const PAD    = 90;
+  const treeW  = maxX - minX || 1;
+  const treeH  = maxY - minY || 1;
+  const scaleX = (W - PAD * 2) / treeW;
+  const scaleY = (H - PAD * 2) / treeH;
+  const scale  = Math.min(scaleX, scaleY) * 0.88;
+  
+  // Centre the tree horizontally and vertically
+  const offX    = (W - treeW * scale) / 2 - minX * scale;
+  const offY_top = (H - treeH * scale) / 2;
+  
+  // Y is flipped: large math-y → small canvas-y (top)
   const px = x =>  x * scale + offX;
-  const py = y => -y * scale + offY + (maxY - minY) * scale; // flip Y axis
+  const py = y => offY_top + (maxY - y) * scale;
 
   // 6. Draw edges (cold → hot order so hot edges paint on top)
   setStatus('Rendering…');
