@@ -117,20 +117,9 @@ def _(
 
 
 @app.cell
-def _(
-	Counter,
-	LineCollection,
-	MAX_VAL,
-	N_STARTS,
-	anchor,
-	chain,
-	defaultdict,
-	fmt_max,
-	longest_len,
-	longest_start,
-	mo,
-	np,
-	plt,
+def __(
+	Counter, LineCollection, MAX_VAL, N_STARTS, anchor, chain,
+	defaultdict, fmt_max, longest_len, longest_start, mo, np, plt,
 ):
 	with mo.status.spinner(title="Rendering tree…"):
 		max_log_count = np.log1p(chain[:, 2].max())
@@ -155,10 +144,9 @@ def _(
 
 				r, g, b, _ = plt.cm.magma(1 - col)
 				segments.append([pos_beg, pos_end])
-				colors.append((r, g, b, max(0.15, col ** 0.5)))   # fade rare edges with alpha
+				colors.append((r, g, b, max(0.15, col ** 0.5)))
 				linewidths.append(2 * col)
 
-				# glow: a second wider, semi-transparent copy for hot edges only
 				if col > 0.5:
 					segments.append([pos_beg, pos_end])
 					colors.append((r, g, b, 0.12 * col))
@@ -171,20 +159,27 @@ def _(
 		ax.axis("off")
 		fig.patch.set_facecolor("#0d0d0d")
 		ax.set_facecolor("#0d0d0d")
-		
+
 		lc = LineCollection(segments, colors=colors, linewidths=linewidths, zorder=1)
 		ax.add_collection(lc)
-		# Dot markers at key junctions
-		for _num in [anchor, longest_start] + top_nodes:   # top_nodes defined below, move it up
-			if _num in node_pos:
-				_x, _y, _col = node_pos[_num]
-				r, g, b, _ = plt.cm.magma(1 - _col)
-				ax.scatter([_x], [_y], s=18, color=(r, g, b), zorder=5, linewidths=0)
-				ax.scatter([_x], [_y], s=50, color=(r, g, b, 0.2), zorder=4, linewidths=0)
-			
 		ax.autoscale()
 
-		# Anchor + longest-chain labels
+		# ── top_nodes defined FIRST ──────────────────────────────────────────
+		branch_counts = Counter(int(_dest) for _dest, _src, _ in chain)
+		top_nodes = [
+			_n for _n, _ in branch_counts.most_common(8)
+			if _n not in (1, anchor, longest_start)
+		][:3]
+
+		# ── Dot markers (can now reference top_nodes) ────────────────────────
+		for _num in [anchor, longest_start] + top_nodes:
+			if _num in node_pos:
+				_x, _y, _col = node_pos[_num]
+				_r, _g, _b, _ = plt.cm.magma(1 - _col)
+				ax.scatter([_x], [_y], s=18, color=(_r, _g, _b), zorder=5, linewidths=0)
+				ax.scatter([_x], [_y], s=50, color=(_r, _g, _b, 0.2), zorder=4, linewidths=0)
+
+		# ── Labels ───────────────────────────────────────────────────────────
 		anchor_label  = f"2¹⁹ = {anchor:,}"
 		longest_label = (
 			f"{longest_start:,}\n"
@@ -197,24 +192,19 @@ def _(
 				ax.text(_x - 0.1, _y + 0.1, _label, fontsize=6, fontname="Georgia",
 						ha="right", va="top", color=plt.cm.magma(1 - _col))
 
-		# Top branching nodes
-		branch_counts = Counter(int(_dest) for _dest, _src, _ in chain)
-		top_nodes = [
-			_n for _n, _ in branch_counts.most_common(8)
-			if _n not in (1, anchor, longest_start)
-		][:3]
 		for _num in top_nodes:
 			if _num in node_pos:
 				_x, _y, _col = node_pos[_num]
 				ax.text(_x, _y - 0.4, f"{_num:,}", fontsize=6, fontname="Georgia",
 						ha="center", va="top", color=plt.cm.magma(1 - _col))
 
-		ax.text(0, -0.4, "1", fontsize=6, ha="center", va="top", color=plt.cm.magma(0.9))
+		ax.text(0, -0.4, "1", fontsize=6, ha="center", va="top",
+				color=plt.cm.magma(0.9))
 
-		# Title / subtitle / caption — all dynamic
-		ax.text(10,  3,  "Collatz conjecture paths",
+		# ── Title / subtitle / caption ───────────────────────────────────────
+		ax.text(10,  3, "Collatz conjecture paths",
 				fontname="Georgia", fontsize=16, color=plt.cm.magma(0.95))
-		ax.text(10,  2,  f"for {N_STARTS:,} random starting points below {fmt_max(MAX_VAL)}",
+		ax.text(10,  2, f"for {N_STARTS:,} random starting points below {fmt_max(MAX_VAL)}",
 				fontname="Georgia", fontsize=8,  color=plt.cm.magma(0.75))
 		ax.text(10, -2,
 			"Starting from the tree root, the path turns left by 8.65° to even nodes\n"
@@ -230,8 +220,7 @@ def _(
 		mo.image(filename, width="100%"),
 		mo.md(f"💾 Saved as `{filename}` at 600 dpi"),
 	])
-	return
-
+	
 
 if __name__ == "__main__":
 	app.run()
