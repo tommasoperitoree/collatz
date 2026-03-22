@@ -137,6 +137,7 @@
     width: 100%;
     max-width: 860px;
     background: #0d0d0d;
+	border: 1px solid #2e2e42;   /* add this line */
     border-radius: 10px;
     overflow: hidden;
     position: relative;
@@ -490,7 +491,7 @@ async function run() {
     ctx.beginPath();
     ctx.moveTo(cx1, cy1);
     ctx.lineTo(cx2, cy2);
-	ctx.strokeStyle = sampleCmap(theme, col);
+	ctx.strokeStyle = sampleCmap(theme, 0.15 + col*0.85);
     ctx.lineWidth = Math.max(0.3, 2.5 * col);
     ctx.stroke();
   }

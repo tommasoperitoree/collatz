@@ -121,6 +121,7 @@ def __(
 	Counter, LineCollection, MAX_VAL, N_STARTS, anchor, chain,
 	defaultdict, fmt_max, longest_len, longest_start, mo, np, plt,
 ):
+	FONT = "DejaVu Serif"
 	with mo.status.spinner(title="Rendering tree…"):
 		max_log_count = np.log1p(chain[:, 2].max())
 
@@ -189,13 +190,13 @@ def __(
 		for _num, _label in zip([anchor, longest_start], [anchor_label, longest_label]):
 			if _num in node_pos:
 				_x, _y, _col = node_pos[_num]
-				ax.text(_x - 0.1, _y + 0.1, _label, fontsize=6, fontname="Georgia",
+				ax.text(_x - 0.1, _y + 0.1, _label, fontsize=6, fontfamily=FONT,
 						ha="right", va="top", color=plt.cm.magma(1 - _col))
 
 		for _num in top_nodes:
 			if _num in node_pos:
 				_x, _y, _col = node_pos[_num]
-				ax.text(_x, _y - 0.4, f"{_num:,}", fontsize=6, fontname="Georgia",
+				ax.text(_x, _y - 0.4, f"{_num:,}", fontsize=6, fontfamily=FONT,
 						ha="center", va="top", color=plt.cm.magma(1 - _col))
 
 		ax.text(0, -0.4, "1", fontsize=6, ha="center", va="top",
@@ -203,15 +204,15 @@ def __(
 
 		# ── Title / subtitle / caption ───────────────────────────────────────
 		ax.text(10,  3, "Collatz conjecture paths",
-				fontname="Georgia", fontsize=16, color=plt.cm.magma(0.95))
+				fontfamily=FONT, fontsize=16, color=plt.cm.magma(0.95))
 		ax.text(10,  2, f"for {N_STARTS:,} random starting points below {fmt_max(MAX_VAL)}",
-				fontname="Georgia", fontsize=8,  color=plt.cm.magma(0.75))
+				fontfamily=FONT, fontsize=8,  color=plt.cm.magma(0.75))
 		ax.text(10, -2,
 			"Starting from the tree root, the path turns left by 8.65° to even nodes\n"
 			"and right by 16° to odd nodes. The length of each edge scales as 1 over\n"
 			"the logarithm of its node further from the root. The color and the thickness\n"
 			"depend linearly on the log1p of how often the edge was traversed.",
-			fontname="Georgia", fontsize=6, linespacing=1.4, color=plt.cm.magma(0.55))
+			fontfamily=FONT, fontsize=6, linespacing=1.4, color=plt.cm.magma(0.55))
 
 		filename = f"collatz-{fmt_max(MAX_VAL).replace(' ', '')}-{N_STARTS}.png"
 		plt.savefig(filename, dpi=600, facecolor="#0d0d0d")
