@@ -490,7 +490,7 @@ async function run() {
     ctx.beginPath();
     ctx.moveTo(cx1, cy1);
     ctx.lineTo(cx2, cy2);
-    ctx.strokeStyle = sampleCmap(theme, 1 - col);
+	ctx.strokeStyle = sampleCmap(theme, col);
     ctx.lineWidth = Math.max(0.3, 2.5 * col);
     ctx.stroke();
   }

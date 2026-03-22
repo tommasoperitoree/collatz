@@ -215,11 +215,18 @@ def __(
 
 		filename = f"collatz-{fmt_max(MAX_VAL).replace(' ', '')}-{N_STARTS}.png"
 		plt.savefig(filename, dpi=600, facecolor="#0d0d0d")
+		
+		# Display a lightweight version inline
+		import io
+		buf = io.BytesIO()
+		fig.savefig(buf, format='png', dpi=150, facecolor="#0d0d0d")
+		buf.seek(0)
+		plt.close(fig)
 
-	mo.vstack([
-		mo.image(filename, width="100%"),
-		mo.md(f"💾 Saved as `{filename}` at 600 dpi"),
-	])
+		mo.vstack([
+		    mo.image(buf, width="100%"),
+		    mo.md(f"💾 Saved as `{filename}` at 600 dpi"),
+		])
 	
 
 if __name__ == "__main__":
